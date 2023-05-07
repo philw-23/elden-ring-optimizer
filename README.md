@@ -1,0 +1,4 @@
+# elden-ring-optimizer
+This repo contains code to produce a list of armor combinations (Helms, Gauntlets, ChestArmor, LegArmor) maximizing a specific stat while subject to a limiting constraint of another stat. The initial designed use case for this is to maximize the poise stat while being subject to a limiting weight constraint.
+
+The DataScraper.ipynb pulls the armor information data from the Fextralife website using the BeautifulSoup package in python. A DataFrame of all the info is generated and saved out for use in the StatOptimizer.ipynb script. The StatOptimizer script generates a linear programming problem using PuLP with this data, and creates a dataframe showing a desired number of potential solutions. Note that to output multiple potential solutions using PuLP, the model is ran multiple times with a constraint added at the end of each run that prevents the same combination of armor pieces from being selected again.
