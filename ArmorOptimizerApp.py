@@ -181,6 +181,7 @@ class ArmorOptimizer(tk.Tk):
     
         # Define PuLP model
         armor_prob = LpProblem("ArmorOptimizer", LpMaximize) # Model
+        solver = getSolver('PULP_CBC_CMD')
         armor_items = LpVariable.dicts('ArmorTypes', [(i, armor_type) for armor_type in self.armor_types
                                                      for i in self.armor_dict[armor_type]], cat='Binary') # Decision variables
         armor_prob += lpSum([self.armor_data_dict[i][stat_to_max] * armor_items[i, armor] 
@@ -207,7 +208,7 @@ class ArmorOptimizer(tk.Tk):
         # Iterate for multiple solutions
         all_solution_sets = []
         for k in range(0, self.num_sols): # Iterate a set number of times
-            armor_prob.solve() # Solve solution
+            armor_prob.solve(solver) # Solve solution
             if armor_prob.status == 1: # Solution found
                 sol_dict = {} # For storing solution info
                 sol_idxs = [] # For storing selected values - add constraint later
@@ -242,7 +243,7 @@ class ArmorOptimizer(tk.Tk):
             return
         
 # Load in data to pass to app
-# os.chdir(sys._MEIPASS) # Uncomment before packaging with pyinstaller
+os.chdir(sys._MEIPASS) # Uncomment before packaging with pyinstaller
 armor_data = pd.read_csv('./EldenRing_Armor_Data.txt', sep='|')
 start_col_idx = armor_data.columns.get_loc('Name') + 1
 end_col_idx = armor_data.columns.get_loc('Wgt') + 1
